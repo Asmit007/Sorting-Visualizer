@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Button = styled.p`
-    color:#fff;
+    color: ${(props) => (props.disabled ? "grey" : "#fff")}; 
     cursor: ${(props) => (props.disabled ? "cursor" : "pointer")};
     font-size: 18px;
     &:hover{
@@ -26,7 +26,6 @@ export const Button = styled.p`
 
 export const SortWrapper = styled.div`
     display:flex;
-   
     flex-direction:row;
     align-content:center;
     width:800px;
@@ -44,7 +43,7 @@ export const SlideWrapper = styled.div`
 `;
 
 export const Text = styled.p`
-    color:#fff;
+    color: ${(props) => (props.disabled ? "grey" : "#fff")};
     font-size: 18px;
     padding-left:10px;
     padding-right:0px;

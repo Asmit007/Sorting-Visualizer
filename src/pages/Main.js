@@ -1,21 +1,25 @@
 import React from "react";
 import styled from 'styled-components';
 
-export default function Main({ data, index }) {
+export default function Main({ data, cur, next }) {
     const width = 200 / data.length;
 
     return (
-
-        <Container>
+        <Container >
             {data.map((size, i) => (
-
                 <>
-                    <Bar height={`${size * 3}px`} width={`${width * 5}px`} key={i} active={index === i} />
-
+                    <Bar height={`${size * 3}px`} width={`${width * 5}px`}
+                        key={i}
+                        active={next === i}
+                        style={(cur === i) ? { backgroundColor: "green" } : null}
+                    />
                 </>
             ))}
         </Container>
     );
+
+
+
 }
 
 

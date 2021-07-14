@@ -5,18 +5,31 @@ import Main from "./Main"
 import { sleep } from "../helpers";
 
 
+
 function App() {
 
   const [size, setSize] = useState(100);
   const [arr, setArr] = useState([]);
   const [cur, setCur] = useState(null);
+  const [next, setNext] = useState(null);
+  const [active, setActive] = useState(false);
+
+
+  const check = (arr) => {
+
+    let flag = true;
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] < arr[i - 1]) flag = false;
+    }
+
+    if (flag === true)
+      setActive(false);
+  }
 
   const handleChange = (event, newValue) => {
     setSize(newValue);
     updateList();
   };
-
-
 
   useEffect(() => {
     updateList();
@@ -31,32 +44,39 @@ function App() {
   const updateList = () => {
     const randomArr = Array.from({ length: size }, () => generateRandomBetween(5, 100) * 2);
     setArr(randomArr);
+
   };
 
 
-  ////////////////////////////////////////////////////
-  const bubbleOnClick = async () => {
 
+
+  ////////////////////////////////////////////////////
+  const bubbleOnClick = () => {
     async function bubbleSort(arr) {
 
       const len = arr.length;
       for (let i = 0; i < len; i++) {
-        await sleep(1);
+        setCur(i);
+        await sleep(10);
         for (let j = 0; j < len; j++) {
-
+          setNext(j);
           if (arr[j] > arr[j + 1]) {
             let temp = arr[j];
             arr[j] = arr[j + 1];
             arr[j + 1] = temp;
+            setArr([...arr]);
+            await sleep(10);
           }
-          setArr([...arr]);
         }
-
       }
-      return arr;
-    }
 
+      check(arr);
+      setNext(null);
+      setCur(null);
+    }
+    setActive(true);
     bubbleSort(arr);
+
 
   };
 
@@ -65,21 +85,26 @@ function App() {
   const MergeOnClick = async () => {
 
     async function mergeArray(start, end) {
+
       let mid = parseInt((start + end) >> 1);
       let start1 = start, start2 = mid + 1
       let end1 = mid, end2 = end
       var itmd = [];
       let index = start
 
+
+
       while (start1 <= end1 && start2 <= end2) {
         if (arr[start1] <= arr[start2]) {
           itmd[index] = arr[start1]
           index = index + 1
+          setCur(index);
           start1 = start1 + 1;
         }
         else if (arr[start1] > arr[start2]) {
           itmd[index] = arr[start2]
           index = index + 1
+          setCur(index);
           start2 = start2 + 1;
         }
       }
@@ -97,12 +122,17 @@ function App() {
       }
 
       index = start
+      setNext(index);
       while (index <= end) {
-        await sleep(5);
+        await sleep(10);
         arr[index] = itmd[index];
+        setCur(index);
+        setArr([...arr]);
         index++;
       }
-      setArr([...arr]);
+
+      check(arr);
+
     }
 
 
@@ -118,8 +148,12 @@ function App() {
 
         await sleep(20);
       }
+      setCur(null);
+      setNext(null);
     }
+    setActive(true);
     mergeSort(0, arr.length - 1);
+
   };
 
   //////////////////////////////////////////
@@ -132,14 +166,18 @@ function App() {
       arr[b] = temp;
     }
 
+
+
     async function Partition(arr, start, end) {
 
       let index = start;
       let Pivot = arr[end];
 
       for (let i = start; i < end; i++) {
+        setNext(i);
         if (arr[i] < Pivot) {
           swap(arr, i, index);
+          setCur(index);
           setArr([...arr]);
           await sleep(50);
           index++;
@@ -149,6 +187,7 @@ function App() {
 
       swap(arr, index, end);
       setArr([...arr]);
+      check(arr);
       return index;
     }
 
@@ -160,8 +199,11 @@ function App() {
       let index = await Partition(arr, start, end);
 
       await Promise.all([QuickSort(arr, start, index - 1), QuickSort(arr, index + 1, end)]);
-    }
+      setCur(null);
+      setNext(null);
 
+    }
+    setActive(true);
     QuickSort(arr, 0, arr.length - 1);
 
   };
@@ -171,28 +213,23 @@ function App() {
   const HeapOnClick = async () => {
 
     async function heapify(arr, n, i) {
-      var largest = i; // Initialize largest as root
-      var l = 2 * i + 1; // left = 2*i + 1
-      var r = 2 * i + 2; // right = 2*i + 2
+      var largest = i;
+      var l = 2 * i + 1;
+      var r = 2 * i + 2;
 
-      // If left child is larger than root
       if (l < n && arr[l] > arr[largest])
         largest = l;
 
-      // If right child is larger than largest so far
       if (r < n && arr[r] > arr[largest])
         largest = r;
 
-      // If largest is not root
       if (largest !== i) {
         var swap = arr[i];
-
+        setCur(i);
         arr[i] = arr[largest];
         arr[largest] = swap;
         await sleep(5);
         setArr([...arr]);
-
-        // Recursively heapify the affected sub-tree
         await heapify(arr, n, largest);
       }
       setArr([...arr]);
@@ -201,29 +238,25 @@ function App() {
 
     async function HeapSort(arr) {
       var n = arr.length;
-
-      // Build heap (rearrange array)
       for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
         await heapify(arr, n, i);
       }
 
-      // One by one extract an element from heap
       for (let i = n - 1; i > 0; i--) {
-        // Move current root to end
         var temp = arr[0];
+        setNext(i);
         arr[0] = arr[i];
         arr[i] = temp;
         await sleep(10);
         setArr([...arr]);
-
-        // call max heapify on the reduced heap
         await heapify(arr, i, 0);
       }
-      // setArr([...arr]);
+      check(arr);
+      setCur(null);
+      setNext(null);
     }
-
+    setActive(true);
     HeapSort(arr);
-
   }
   //////////////////////////////////////////
 
@@ -233,8 +266,9 @@ function App() {
       let n = inputArr.length;
 
       for (let i = 0; i < n; i++) {
-        // Finding the smallest number in the subarray
+
         let min = i;
+        setCur(i);
         for (let j = i + 1; j < n; j++) {
 
           if (inputArr[j] < inputArr[min]) {
@@ -243,22 +277,28 @@ function App() {
           }
         }
         if (min !== i) {
-          // Swapping the elements
+
           let tmp = inputArr[i];
+          setNext(min);
           inputArr[i] = inputArr[min];
           inputArr[min] = tmp;
           setArr([...arr]);
         }
         await sleep(100);
+        setCur(null);
+        setNext(null);
       }
 
-
-
-      return inputArr;
+      setCur(null);
+      setNext(null);
+      check(arr);
     }
+    setActive(true);
     selectionSort(arr);
+
   }
   //////////////////////////////////////////
+
 
   const InsertOnClick = async () => {
 
@@ -268,21 +308,25 @@ function App() {
         let current = inputArr[i];
         setCur(i);
         let j = i - 1;
+
         while ((j > -1) && (current < inputArr[j])) {
+          setNext(j);
           inputArr[j + 1] = inputArr[j];
           j--;
-          setArr([...arr]);
+
+          await sleep(10);
         }
+
         inputArr[j + 1] = current;
-        setArr([...arr]);
-        await sleep(100);
+        setArr([...inputArr]);
+        await sleep(10);
       }
-
-      return inputArr;
+      setCur(null);
+      setNext(null);
+      check(arr);
     }
-
+    setActive(true);
     insertionSort(arr);
-
   }
   ///////////////////////////////////////////
   return (
@@ -296,8 +340,9 @@ function App() {
         SelectOnClick={SelectOnClick}
         InsertOnClick={InsertOnClick}
         value={size}
+        isActive={active}
       />
-      <Main data={arr} val={cur} />
+      <Main data={arr} cur={cur} next={next} />
     </div>
   );
 }

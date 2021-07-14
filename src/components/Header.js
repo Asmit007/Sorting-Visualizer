@@ -8,48 +8,59 @@ import logo from './android-chrome-512x512.png';
 
 
 
-export default function Header({ handleChange, updateList, bubbleOnClick, MergeOnClick, QuickOnClick, HeapOnClick, value, SelectOnClick, InsertOnClick }) {
-
+export default function Header({
+    handleChange,
+    updateList,
+    bubbleOnClick,
+    MergeOnClick,
+    QuickOnClick,
+    HeapOnClick,
+    value,
+    SelectOnClick,
+    InsertOnClick,
+    isActive,
+}) {
+    console.log("isActive = ", isActive);
     return (
         <Wrapper>
 
             <Logo src={logo} />
 
             <GNA>
-                <Button onClick={updateList} > Generate New Array</Button>
+                <Button disabled={isActive} onClick={(isActive) === false ? updateList : null} > Generate New Array</Button>
             </GNA>
-            <Text> Range: </Text>
+            <Text disabled={isActive}> Range: </Text>
 
             <SlideWrapper>
-                <Slider value={value} onChange={handleChange} max={250} min={10} step={10} aria-labelledby="continuous-slider" />
+                <Slider disabled={isActive} value={value} onChange={handleChange} max={250} min={10} step={10} aria-labelledby="continuous-slider" />
             </SlideWrapper>
 
 
             <SortWrapper>
 
                 <Tooltip title="Complexity: O(NlogN)" position="bottom" trigger="mouseenter">
-                    <Button onClick={MergeOnClick}  > Merge Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? MergeOnClick : null}  > Merge Sort</Button>
                 </Tooltip>
 
 
                 <Tooltip title="Complexity: O(NlogN)" position="bottom" trigger="mouseenter">
-                    <Button onClick={QuickOnClick}> Quick Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? QuickOnClick : null}> Quick Sort</Button>
                 </Tooltip>
 
                 <Tooltip title="Complexity: O(NlogN)" position="bottom" trigger="mouseenter">
-                    <Button onClick={HeapOnClick}> Heap Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? HeapOnClick : null}> Heap Sort</Button>
                 </Tooltip>
 
                 <Tooltip title="Complexity: O(N^2)" position="bottom" trigger="mouseenter">
-                    <Button onClick={bubbleOnClick}> Bubble Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? bubbleOnClick : null}> Bubble Sort</Button>
                 </Tooltip>
 
                 <Tooltip title="Complexity: O(N^2)" position="bottom" trigger="mouseenter">
-                    <Button onClick={InsertOnClick}> Insertion Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? InsertOnClick : null}> Insertion Sort</Button>
                 </Tooltip>
 
                 <Tooltip title="Complexity: O(N^2)" position="bottom" trigger="mouseenter">
-                    <Button onClick={SelectOnClick}> Selection Sort</Button>
+                    <Button disabled={isActive === true} onClick={(isActive) === false ? SelectOnClick : null}> Selection Sort</Button>
                 </Tooltip>
             </SortWrapper>
 
